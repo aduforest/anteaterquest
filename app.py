@@ -128,7 +128,7 @@ def display_result_card(result):
     st.markdown(card_content, unsafe_allow_html=True)
 
 def main():
-    st.markdown("<h1 style='text-align: center;'><a href='https://uci.streamlit.app/' style='text-decoration: none; color: inherit;'>AnteaterQuest 🚀</a></h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'><a href='https://uci.streamlit.app/' style='text-decoration: none; color: inherit;'>ZotExplore 🗺️</a></h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; margin-top: -10px; color: #ccc;'>Search your Fall 2023 courses using AI</p>", unsafe_allow_html=True)
     search_query = st.text_input("Search for courses", "")
 
@@ -167,7 +167,7 @@ def main():
             if i < len(results):
                 display_result_card(results.iloc[i])
     #st.markdown("<p style='text-align: center; margin-top: 10px; color: #ccc;'>🚨 If the text is illegible, set the theme to DARK: 3 lines on the top right > settings > theme: dark 🚨</p>", unsafe_allow_html=True)
-    st.markdown("<div style='text-align: center; margin-top: 5px;'><a href='mailto:duforesa@uci.edu?subject=Feedback%20-%20Anteater%20Quest'>Leave feedback</a></div>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align: center; margin-top: 5px;'><a href='mailto:duforesa@uci.edu?subject=Feedback%20-%20Zot%20Explore'>Leave feedback</a></div>", unsafe_allow_html=True)
     #st.markdown("<p style='text-align: center; margin-top: 20px; color: #ccc;'>Currently in beta with upcoming features</p>", unsafe_allow_html=True)
     st.markdown("<hr margintop: 20px>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; margin-top: 25;'>Made by Alexandre Duforest</p>", unsafe_allow_html=True)
