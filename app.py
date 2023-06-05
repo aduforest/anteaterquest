@@ -17,7 +17,7 @@ def get_embedding(text):
 DATA_URL = "courses_with_embeddings.csv"
 
 @st.cache_data
-def blending_wonders():
+def pull_data():
     df = pd.read_csv(DATA_URL, encoding='ISO-8859-1')
 
     # Convert the string representation of array to actual array
@@ -49,7 +49,7 @@ def split_units(units_str):
     return min_units, max_units
 
 @st.cache_data
-def brewing_magic(search_query, df):
+def organize(search_query, df):
     # Check if the search query exactly matches a Class Name
     class_name_exact_matches = df[df['Class Name'].str.match(search_query, case=False)]
 
@@ -94,7 +94,7 @@ def brewing_magic(search_query, df):
     return all_matches
 
 
-def display_result_card(result):
+def display_card(result):
     card_style = """
     <style>
         .card {
@@ -149,7 +149,7 @@ def main():
         unit_filters['5 Units'] = col5.checkbox('5+ Units', value=unit_filters['5 Units'])
 
     if search_query:
-        df = blending_wonders()
+        df = pull_data()
             
         # Filter by the selected units
         selected_unit_filters = [int(unit.split(" ")[0]) for unit, value in unit_filters.items() if value]
@@ -160,12 +160,12 @@ def main():
             df = df[(df['Min Units'] <= max_selected_unit) & (df['Max Units'] >= min_selected_unit)]
 
             
-        results = brewing_magic(search_query, df)
+        results = organize(search_query, df)
 
         
         for i in range(10): # Always display the first 10 entries
             if i < len(results):
-                display_result_card(results.iloc[i])
+                display_card(results.iloc[i])
     #st.markdown("<p style='text-align: center; margin-top: 10px; color: #ccc;'>🚨 If the text is illegible, set the theme to DARK: 3 lines on the top right > settings > theme: dark 🚨</p>", unsafe_allow_html=True)
     st.markdown("<div style='text-align: center; margin-top: 5px;'><a href='mailto:duforesa@uci.edu?subject=Feedback%20-%20Zot%20Explore'>Leave feedback</a></div>", unsafe_allow_html=True)
     #st.markdown("<p style='text-align: center; margin-top: 20px; color: #ccc;'>Currently in beta with upcoming features</p>", unsafe_allow_html=True)
