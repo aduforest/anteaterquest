@@ -53,24 +53,11 @@ def brewing_magic(search_query, df):
     # Check if the search query exactly matches a Class Name
     class_name_exact_matches = df[df['Class Name'].str.match(search_query, case=False)]
 
-    if len(class_name_exact_matches) >= 10:
-        # If there are at least 10 exact matches, sort by class name
-        class_name_exact_matches.sort_values(by='Class Name', inplace=True)
-        return class_name_exact_matches.head(10)
-
     # Check if the search query is in any Class Name
     class_name_partial_matches = df[df['Class Name'].str.contains(search_query, case=False)]
 
     # Filter out exact matches from partial matches
     class_name_partial_matches = class_name_partial_matches[~class_name_partial_matches['Class Name'].isin(class_name_exact_matches['Class Name'])]
-
-    # Get the remaining number of results needed
-    remaining_results = 10 - len(class_name_exact_matches)
-
-    if len(class_name_partial_matches) >= remaining_results:
-        # If there are at least the remaining number of partial matches, sort by class name
-        class_name_partial_matches.sort_values(by='Class Name', inplace=True)
-        return pd.concat([class_name_exact_matches.head(10), class_name_partial_matches.head(remaining_results)])
 
     # Check if the search query exactly matches a Class Description
     class_description_exact_matches = df[df['Class Description'].str.match(search_query, case=False)]
@@ -80,14 +67,6 @@ def brewing_magic(search_query, df):
 
     # Filter out exact matches from class name partial matches and class description exact matches
     class_description_exact_matches = class_description_exact_matches[~class_description_exact_matches['Class Name'].isin(class_name_partial_matches['Class Name'])]
-
-    # Get the remaining number of results needed
-    remaining_results = 10 - len(class_name_exact_matches) - len(class_name_partial_matches)
-
-    if len(class_description_exact_matches) >= remaining_results:
-        # If there are at least the remaining number of description exact matches, sort by class name
-        class_description_exact_matches.sort_values(by='Class Name', inplace=True)
-        return pd.concat([class_name_exact_matches.head(10), class_name_partial_matches.head(remaining_results), class_description_exact_matches.head(remaining_results)])
 
     # Use SentenceTransformer to get the embedding of the search query
     search_embedding = get_embedding(search_query)
@@ -104,12 +83,16 @@ def brewing_magic(search_query, df):
     df["similarities"] = similarities
     df.sort_values(by="similarities", ascending=False, inplace=True)
 
-    # Ensure there are at least 10 semantic search results
-    if len(df) >= 10:
-        return df.head(10)
+    # Combine all matches
+    all_matches = pd.concat([
+        class_name_exact_matches,
+        class_name_partial_matches,
+        class_description_exact_matches,
+        df
+    ])
 
-    # If there are less than 10 results, return all results
-    return df
+    return all_matches
+
 
 def display_result_card(result):
     card_style = """
